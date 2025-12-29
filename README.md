@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# React TypeScript Alert Demo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Small Vite + React project that showcases a reusable alert component with multiple states (info, success, warning, error, default) and Lucide icons. It ships with TypeScript typings, SCSS theming, and a minimal example page for quick exploration.
 
-Currently, two official plugins are available:
+## Quick start
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Then open the dev server URL printed in the terminal (usually http://localhost:5173).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Available scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `npm run dev` start the Vite dev server with HMR
+- `npm run build` create a production build in `dist`
+- `npm run preview` preview the production build locally
+
+## Project structure
+
+- [src/main.tsx](src/main.tsx) app bootstrap with React 19 StrictMode
+- [src/App.tsx](src/App.tsx) example page rendering the alert variations
+- [src/components/ui/Alert/Alert.tsx](src/components/ui/Alert/Alert.tsx) alert component logic and layout
+- [src/components/ui/Alert/index.scss](src/components/ui/Alert/index.scss) SCSS theme tokens and mixin-generated variants
+- [src/types/index.ts](src/types/index.ts) shared `AlertTypes` union for type-safe variants
+
+## Alert component
+
+The `Alert` component supports icons, titles, optional descriptions, and custom children. The type drives the styling class applied by the SCSS mixin.
+
+**Props**
+
+- `title: string` heading text
+- `type: "alert-default" | "alert-info" | "alert-warning" | "alert-error" | "alert-success"` variant key
+- `icon: ReactNode` leading icon (Lucide in the demo)
+- `description?: string` optional body text (used when no children are provided)
+- `children?: ReactNode` custom content; when present it replaces `description`
+
+**Usage**
+
+```tsx
+import { AlertTriangle } from "lucide-react";
+import Alert from "./components/ui/Alert/Alert";
+
+export const Example = () => (
+  <Alert
+    type="alert-warning"
+    icon={<AlertTriangle size={20} />}
+    title="Heads up"
+    description="Something noteworthy just happened."
+  />
+);
 ```
+
+## Styling
+
+The SCSS file defines color tokens for each variant and uses a mixin to generate the classes. To adjust the look, edit the token variables in [src/components/ui/Alert/index.scss](src/components/ui/Alert/index.scss). Link styles are emphasized and the close icon is purely decorative in the current demo.
+
+## Tech stack
+
+- React 19 with TypeScript
+- Vite 7 for tooling and dev server
+- SCSS modules for theming
+- Lucide icons for visuals
+
+## Production build
+
+```bash
+npm run build
+npm run preview
+```
+
+`preview` serves the optimized build so you can sanity-check before deploying.
+
+## Notes
+
+- RxJS is installed for future reactive additions but is not used in the current demo.
+- The alert close icon is present for UI parity; wiring a dismiss handler would be a small extension if needed.
